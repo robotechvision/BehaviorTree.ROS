@@ -43,7 +43,9 @@ protected:
   RosActionNode(ros::NodeHandle& nh, const std::string& name, const BT::NodeConfiguration & conf):
   BT::ActionNodeBase(name, conf), node_(nh)
   {
-    const std::string server_name = getInput<std::string>("server_name").value();
+    std::string server_name;
+    if (!getInput<std::string>("server_name", server_name))
+      throw BT::RuntimeError("RosActionNode "+name+": 'server_name' attribute must be set");
     action_client_ = std::make_shared<ActionClientType>( node_, server_name, true );
   }
 

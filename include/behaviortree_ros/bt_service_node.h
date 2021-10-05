@@ -86,8 +86,10 @@ protected:
   BT::NodeStatus tick() override
   {
     if( !service_client_.isValid() ){
-      std::string server = getInput<std::string>("service_name").value();
-      service_client_ = node_.serviceClient<ServiceT>( server );
+      std::string server;
+      if (!getInput<std::string>("service_name", server))
+        throw BT::RuntimeError("RosServiceNode "+name()+": 'service_name' attribute must be set");
+      service_client_ = node_.serviceClient<ServiceT>( server, true );
     }
 
     unsigned msec;
